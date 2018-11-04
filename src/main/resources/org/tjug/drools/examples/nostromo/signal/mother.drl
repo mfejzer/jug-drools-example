@@ -1,0 +1,16 @@
+package org.tjug.drools.examples.nostromo.signal
+
+rule "received signal"
+when
+    signal : Signal( distance < 10 )
+then
+    System.out.println("Detected "+signal);
+    insert(new CourseCorrection(signal.getPointOfOrigin().getName()));
+end
+
+rule "new destination"
+when
+    courseCorrection : CourseCorrection( )
+then
+    System.out.println("Changing course to "+courseCorrection.getDestination());
+end

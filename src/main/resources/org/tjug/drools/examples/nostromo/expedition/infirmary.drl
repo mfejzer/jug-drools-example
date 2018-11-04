@@ -1,0 +1,56 @@
+package org.tjug.drools.examples.nostromo.expedition;
+import org.tjug.drools.examples.nostromo.alien.ChestBuster
+import org.tjug.drools.examples.nostromo.alien.FaceHugger
+import org.tjug.drools.examples.nostromo.crew.CrewMember
+import org.tjug.drools.examples.nostromo.decks.Room
+import org.tjug.drools.examples.nostromo.decks.RoomType
+import org.tjug.drools.examples.nostromo.decks.RoomBelow
+
+dialect  "mvel"
+
+rule "infirmary"
+    agenda-group "infirmary"
+    salience 100
+    when
+        faceHugger : FaceHugger()
+    then
+        System.out.println("We need to cut it of");
+        insert(new AttemptToCut(faceHugger))
+end
+
+
+rule "remove facehugger"
+    agenda-group "infirmary"
+    salience 10
+    when
+        crewMember : CrewMember()
+        faceHugger: FaceHugger(attached == crewMember)
+        attemptToCut: AttemptToCut(what == faceHugger)
+        infirmary : Room(roomType == RoomType.INFIRMARY)
+    then
+        retract(attemptToCut)
+        System.out.println("Ups");
+        insert(new AcidOnFloor(infirmary))
+end
+
+rule "acid drops"
+    agenda-group "infirmary"
+    when
+        acidOnFloor : AcidOnFloor()
+        roomBellow : RoomBelow(upperRoom == acidOnFloor.room)
+    then
+        retract(acidOnFloor)
+        System.out.println("Acid drops to "+roomBellow.getLowerRoom());
+        insert(new AcidOnFloor(roomBellow.lowerRoom))
+end
+
+rule "facehugger detach"
+    agenda-group "infirmary"
+    when
+        crewMember : CrewMember()
+        faceHugger: FaceHugger(attached == crewMember)
+    then
+        retract(faceHugger)
+        System.out.println("Facehugger detached from "+crewMember);
+        insert(new ChestBuster(crewMember));
+end

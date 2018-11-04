@@ -1,0 +1,16 @@
+package org.tjug.drools.examples.nostromo.expedition;
+import org.tjug.drools.examples.nostromo.alien.Egg
+import org.tjug.drools.examples.nostromo.alien.FaceHugger
+import org.tjug.drools.examples.nostromo.crew.CrewMember
+dialect  "mvel"
+
+rule "investigation"
+    agenda-group "investigation"
+    when
+        crewMember : CrewMember()
+        egg: Egg()
+    then
+        retract(egg)
+        System.out.println("Facehugger attaches to "+crewMember);
+        insert(new FaceHugger(crewMember))
+end

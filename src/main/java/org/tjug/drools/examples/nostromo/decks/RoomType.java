@@ -1,0 +1,7 @@
+package org.tjug.drools.examples.nostromo.decks;
+
+public enum RoomType {
+    BRIDGE, INFIRMARY, SLEEP_CHAMBER, COMPUTER_INTERFACE, MAIN_AIRLOCK, //A DECK
+    SHUTTLE_ACCESS, STORAGE, //B DECK
+    ENGINEERING, EQUIPMENT_STORAGE, OBSERVATION //C DECK
+}

@@ -1,0 +1,15 @@
+package org.tjug.drools.examples.nostromo.crew
+
+import org.tjug.drools.examples.nostromo.crew.items.Item
+
+query "all crew members"
+    crewMember : CrewMember()
+end
+
+query "crew members with occupation" (Occupation occupation)
+    crewMember : CrewMember(occupation == occupation)
+end
+
+query "crew members carrying" (Item item)
+    crewMember : CrewMember(items contains item)
+end

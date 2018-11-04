@@ -1,0 +1,22 @@
+package org.tjug.drools.examples.nostromo.escape;
+dialect  "mvel"
+
+import org.tjug.drools.examples.nostromo.crew.CrewMember
+
+global Shuttle shuttleActingAsEscapePod
+
+rule "enter shuttle"
+    when
+        crewMember : CrewMember()
+    then
+        shuttleActingAsEscapePod.enter(crewMember);
+        retract(crewMember)
+end
+
+rule "escape"
+    when
+        not(CrewMember())
+    then
+        shuttleActingAsEscapePod.launch();
+end
+

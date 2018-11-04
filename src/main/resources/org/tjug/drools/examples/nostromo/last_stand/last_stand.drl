@@ -1,0 +1,18 @@
+package org.tjug.drools.examples.nostromo.last_stand;
+
+import org.tjug.drools.examples.nostromo.crew.CrewMember
+import org.tjug.drools.examples.nostromo.crew.items.GrapplingHook
+import org.tjug.drools.examples.nostromo.vent.Alien
+
+dialect  "mvel"
+
+rule "last_stand"
+    when
+        crewMember : CrewMember()
+        if(crewMember.items contains new GrapplingHook()) do[harpoonTheAlien]
+        alien : Alien()
+    then
+        System.out.println("This is the final log of"+crewMember);
+    then[harpoonTheAlien]
+        System.out.println("Through airlock it goes");
+end

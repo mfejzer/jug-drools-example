@@ -1,0 +1,12 @@
+package org.tjug.drools.examples.nostromo.expedition;
+import org.tjug.drools.examples.nostromo.alien.ChestBuster
+dialect  "mvel"
+
+rule "dinner"
+    agenda-group "dinner"
+    when
+        chestBuster : ChestBuster()
+    then
+        retract(chestBuster.host)
+        System.out.println(chestBuster.getHost()+" died");
+end

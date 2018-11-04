@@ -1,0 +1,35 @@
+package org.tjug.drools.examples.nostromo.vent
+import org.tjug.drools.examples.nostromo.crew.items.Flamethrower
+import org.tjug.drools.examples.nostromo.crew.CrewMember
+
+rule a @Defeasible
+when
+    crewMember : CrewMember(items contains new Flamethrower())
+    alien : Alien( )
+then
+    insertLogical(new InitiativeToKill(alien, crewMember));
+    insertLogical(new InitiativeToKill(crewMember, alien), "neg");
+end
+
+rule b @Defeats("a")
+when
+    crewMember : CrewMember(items contains new Flamethrower())
+    alien : Alien( )
+then
+    insertLogical(new InitiativeToKill(crewMember, alien));
+    insertLogical(new InitiativeToKill(alien, crewMember), "neg");
+end
+
+rule "annouce death"
+when
+    kill : InitiativeToKill( )
+then
+    System.out.println(kill.getVictim() + " was killed by "+ kill.getPerpetrator());
+end
+
+rule "annouce failure"
+when
+    failure : InitiativeToKill( _.neg )
+then
+    System.out.println(failure.getPerpetrator()+" lost initiative");
+end

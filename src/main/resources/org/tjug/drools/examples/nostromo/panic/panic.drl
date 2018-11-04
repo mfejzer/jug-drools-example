@@ -1,0 +1,41 @@
+package org.tjug.drools.examples.nostromo.panic;
+import org.tjug.drools.examples.nostromo.crew.CrewMember
+dialect  "mvel"
+
+declare PanickedCrewMember extends CrewMember
+    panicLevel : Integer
+end
+
+rule "someone panicks"
+    no-loop
+    when
+        crewMember : CrewMember()
+    then
+        PanickedCrewMember panickedCrewMember = new PanickedCrewMember();
+        panickedCrewMember.setName(crewMember.getName());
+        panickedCrewMember.setOccupation(crewMember.getOccupation());
+        panickedCrewMember.setItems(crewMember.getItems());
+        panickedCrewMember.setPanicLevel(1);
+        insert(panickedCrewMember)
+        System.out.println(panickedCrewMember);
+end
+
+rule "what was that"
+    when
+        strangeNoise : StrangeNoise( )
+        panickedCrewMember : PanickedCrewMember(panicLevel > 0 )
+    then
+        retract(strangeNoise)
+        modify(panickedCrewMember){panicLevel+=1}
+        System.out.println(panickedCrewMember);
+end
+
+rule "oh"
+     when
+        gutsOnFloor : GutsOnFloor( )
+        panickedCrewMember : PanickedCrewMember(panicLevel > 0 )
+    then
+        retract(gutsOnFloor)
+        modify(panickedCrewMember){panicLevel+=1}
+        System.out.println(panickedCrewMember);
+end
